@@ -1,0 +1,82 @@
+# ============================================================================
+#  Subtitle Proofreader —— 只提交「源码 + 运行时必需的模型」，其余都是可再生成的
+# ============================================================================
+
+# ---------------------------------------------------------------- 构建产物
+build/
+dist/
+release/
+node_modules/
+frontend/build/
+frontend/build-sidecar/
+frontend/release/
+frontend/node_modules/
+
+# --------------------------------------------------- Python 环境与各类缓存
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.tools/
+*.log
+.commit-msg.tmp
+
+# ------------------------------------------------------------ 运行/导出产物
+outputs/
+frontend/outputs/
+.tmp_*.py
+
+# --------------------------- avl-open 自己的实验产物（根仓库再忽略一遍）
+avl-open/build/
+avl-open/dist/
+avl-open/results/
+
+# ============================================================================
+#  体积大、但运行时用不到的文件（App 只用 res18 检测器 + v6_small + korean_v5）
+#  · v5 / v6-tiny 识别头只能通过环境变量或 avl-open CLI 手动选用，默认不走；
+#  · 韩文的 PIR 转换源（13MB）可从 Hugging Face 的
+#    PaddlePaddle/korean_PP-OCRv5_mobile_rec 重新下载，
+#    再按 TECH_STACK.md「模型与来源」一节的 paddle2onnx 步骤转出 ONNX。
+#  如果确实要把它们也入库，把下面几行删掉即可。
+# ============================================================================
+avl-open/avl_open_ocr/model_files/paddle_v5_rec_sft.onnx
+avl-open/avl_open_ocr/model_files/paddle_v5_dict.txt
+avl-open/avl_open_ocr/model_files/paddle_v6_rec_tiny.onnx
+avl-open/avl_open_ocr/model_files/paddle_v6_tiny_dict.txt
+avl-open/avl_open_ocr/model_files/korean_PP-OCRv5_mobile_rec_infer/
+
+# ------------------------------------------ 仅本地保留的工程文档（不入库）
+TECH_STACK.md
+CHANGELOG.md
+DEVELOPMENT.md
+ERROR_LOG.md
+FRONTEND_SCOPE.md
+MODEL_PROVENANCE.md
+SESSION_RESTORE_DESIGN.md
+SIDECAR_API.md
+ocr_opensource_prd_v1.md
+
+# ------------------------------------------ 仅本地保留的测试与 CI 配置（不入库）
+/tests/
+/avl-open/tests/
+/pytest.ini
+/frontend/scripts/smoke-renderer.js
+/frontend/scripts/smoke-sidecar.js
+/frontend/scripts/smoke-main.js
+/.github/workflows/ci.yml
+/.gitlab-ci.yml
+
+# ------------------------------------------ 仅本地保留的评测与性能脚本（不入库）
+/avl-open/evaluate_*.py
+/avl-open/profile_*.py
+/avl-open/run_ablation.py
+
+# ------------------------------------ 第三方许可文本（构建时随包，不入库）
+/licenses/
+/build-sidecar/
+
+# ------------------------------------------ 前端 / OCR 库的说明文档（仅本地）
+/frontend/README.md
+/avl-open/README.md

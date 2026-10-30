@@ -1,0 +1,68 @@
+{
+  "name": "avl-subtitle-ocr",
+  "version": "0.1.0",
+  "description": "Desktop showcase for OCR subtitle extraction and proofreading.",
+  "author": "AllVoiceLab",
+  "license": "Apache-2.0",
+  "main": "src/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "prepare-sidecar": "node scripts/prepare-sidecar.js",
+    "prepack": "node scripts/prepare-sidecar.js",
+    "pack": "electron-builder --dir",
+    "predist": "node scripts/prepare-sidecar.js",
+    "dist": "electron-builder --win nsis portable"
+  },
+  "build": {
+    "appId": "com.allvoicelab.avl-subtitle-ocr",
+    "productName": "AVL-SubtitleOCR",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "build-sidecar",
+        "to": "sidecar",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../LICENSE",
+        "to": "LICENSE"
+      },
+      {
+        "from": "../THIRD_PARTY_NOTICES.md",
+        "to": "THIRD_PARTY_NOTICES.md"
+      }
+    ],
+    "win": {
+      "icon": "src/icons/icon-neon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "artifactName": "AVL-SubtitleOCR-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "AVL-SubtitleOCR-Portable-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "include": "resources/installer.nsh",
+      "installerLanguages": ["zh_CN", "en_US"],
+      "displayLanguageSelector": true,
+      "artifactName": "AVL-SubtitleOCR-Setup-${version}.${ext}"
+    }
+  },
+  "devDependencies": {
+    "electron": "^32.3.3",
+    "electron-builder": "^25.1.8"
+  }
+}

@@ -1,0 +1,33 @@
+# ---------------------------------------------------------------------------
+#  发布构建依赖清单（Windows x64）
+#
+#  版本全部写死（==）：安装包就是用这份清单构建出来的。改任何一行都要清掉旧
+#  后端重新打包，并把实测结果同步到 TECH_STACK.md 的第 8–10 节：
+#      Remove-Item -Recurse -Force dist\SubtitleSidecar, build\SubtitleSidecar
+#      build_sidecar_windows.bat
+#
+#  校验过的解释器：CPython 3.14.6 (Windows x64)。
+#  av（mkv/avi 预览重封装）与 pillow（sidecar 定格帧 JPEG）是运行时必需——以前
+#  它们没写在这份清单里、由构建脚本单独安装，装不上只告警继续，于是不同机器打
+#  出来的包能力可能不一样；现在缺一个就构建失败（除非显式 --allow-no-preview）。
+# ---------------------------------------------------------------------------
+
+# ------------------------------------------------------------ OCR 主链路
+numpy==2.5.2
+opencv-python==5.0.0.93
+# 同一个 onnxruntime 模块只能有一个发行版：Windows 用 DirectML 版（自带 CPU
+# 执行器与自动回退，N 卡 / A 卡 / Intel 核显都能走 GPU），其它平台装普通版。
+# 非 Windows 的组合没有实测过，所以只给下限。
+onnxruntime-directml==1.24.4; sys_platform == "win32"
+onnxruntime>=1.16; sys_platform != "win32"
+pyclipper==1.4.0
+shapely==2.1.2
+
+# ------------------------- 预览与定格帧（sidecar/preview.py、sidecar/frames.py）
+av==18.1.0
+pillow==12.3.0
+
+# ------------------------------------------- 构建与测试（只有构建机 / 开发机需要）
+pyinstaller==6.22.2
+pyinstaller-hooks-contrib==2026.7
+pytest==9.1.1

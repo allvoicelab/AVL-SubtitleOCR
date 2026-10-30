@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AVL-SubtitleOCR</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="theme-light">
+    <div class="window-shell">
+      <header class="titlebar">
+        <div class="window-caption" title="拖动以移动窗口" data-i18n-title="拖动以移动窗口">
+          <div class="brand-caption">AVL-SubtitleOCR</div>
+        </div>
+        <div class="window-controls" role="group" aria-label="窗口控制" data-i18n-aria-label="窗口控制">
+          <button id="minimizeWindowButton" type="button" title="最小化" aria-label="最小化" data-i18n-title="最小化" data-i18n-aria-label="最小化">
+            <span class="window-icon minimize-icon"></span>
+          </button>
+          <button id="maximizeWindowButton" type="button" title="最大化" aria-label="最大化" data-i18n-title="最大化" data-i18n-aria-label="最大化">
+            <span class="window-icon maximize-icon"></span>
+          </button>
+          <button id="closeWindowButton" class="close-window-button" type="button" title="关闭" aria-label="关闭" data-i18n-title="关闭" data-i18n-aria-label="关闭">
+            <span class="window-icon close-icon"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="app-layout">
+        <aside class="sidebar" aria-label="主导航" data-i18n-aria-label="主导航">
+          <div class="sidebar-main">
+            <button class="brand-mark" id="brandButton" type="button" title="由趣丸千音 AllVoiceLab 出品 · 点此了解我们" aria-label="关于趣丸千音 AllVoiceLab" data-i18n-title="由趣丸千音 AllVoiceLab 出品 · 点此了解我们" data-i18n-aria-label="关于趣丸千音 AllVoiceLab">
+              <span></span>
+            </button>
+            <button class="nav-button" id="newTaskButton" type="button" title="新建任务" data-i18n-title="新建任务">
+              <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              <strong data-i18n="新建任务">新建任务</strong>
+            </button>
+            <button class="nav-button" id="fileManagerButton" type="button" title="文件" data-i18n-title="文件">
+              <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+              <strong data-i18n="文件">文件</strong>
+            </button>
+            <button class="nav-button active" id="proofreadNavButton" type="button" title="校对" data-i18n-title="校对">
+              <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v9.5"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z"/></svg>
+              <strong data-i18n="校对">校对</strong>
+            </button>
+            <button class="nav-button" id="settingsButton" type="button" title="设置" data-i18n-title="设置">
+              <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+              <strong data-i18n="设置">设置</strong>
+            </button>
+          </div>
+          <div class="sidebar-tools">
+            <button class="side-tool" id="themeToggleButton" type="button" title="切换浅色/深色" data-i18n-title="切换浅色/深色">
+              <svg class="svg-icon svg-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+              <svg class="svg-icon svg-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+              <strong data-i18n="主题">主题</strong>
+            </button>
+          </div>
+          <button class="sidebar-handle" id="collapseSidebarButton" type="button" title="收起侧边栏" aria-label="收起或展开侧边栏" data-i18n-title="收起侧边栏" data-i18n-aria-label="收起或展开侧边栏">
+            <svg class="svg-icon svg-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <svg class="svg-icon svg-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </aside>
+
+        <main class="workspace" id="workspace">
+          <section class="app-view active" id="proofreadView">
+            <div class="page-head">
+              <div class="title-stack">
+                <h1 data-i18n="字幕校对">字幕校对</h1>
+                <span class="divider"></span>
+                <p id="currentFileName" data-i18n="尚未选择视频">尚未选择视频</p>
+              </div>
+              <div class="head-actions">
+                <button class="primary-btn" id="exportButton" type="button">
+                  <svg class="svg-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                  <span id="exportButtonLabel" data-i18n="导出当前 SRT">导出当前 SRT</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="proofread-grid">
+              <article class="video-panel">
+                <div class="video-frame" id="videoFrame">
+                  <video id="videoPlayer" playsinline></video>
+                  <div class="still-overlay hidden" id="stillOverlay">
+                    <img id="stillImage" alt="定格帧"  data-i18n-alt="定格帧"/>
+                    <div class="still-badge">
+                      <strong data-i18n="定格帧">定格帧</strong>
+                      <span id="stillTime">--:--:--</span>
+                      <button class="still-close" id="stillCloseButton" type="button" title="收起定格帧" aria-label="收起定格帧" data-i18n-title="收起定格帧" data-i18n-aria-label="收起定格帧">×</button>
+                    </div>
+                  </div>
+                  <div class="empty-player hidden" id="emptyPlayer">
+                    <span class="play-circle"></span>
+                  </div>
+                  <div class="preview-notice hidden" id="previewNotice">
+                    <strong id="previewNoticeTitle" data-i18n="无法在应用内预览">无法在应用内预览</strong>
+                    <span id="previewNoticeText"></span>
+                    <div class="preview-notice-actions">
+                      <button class="ghost-btn compact hidden" id="previewPrepareButton" type="button" data-i18n="准备预览">准备预览</button>
+                      <button class="ghost-btn compact" id="openInPlayerButton" type="button" data-i18n="用系统播放器打开">用系统播放器打开</button>
+                    </div>
+                  </div>
+                  <div class="poster-state" id="posterState">
+                    <div class="poster-landscape"></div>
+                    <p id="subtitleOverlay" data-i18n="选择视频后可在这里播放并校对字幕">选择视频后可在这里播放并校对字幕</p>
+                  </div>
+                  <div class="player-controls hidden" id="playerControls">
+                    <button class="pc-button" id="playPauseButton" type="button" title="播放 / 暂停（空格）" aria-label="播放或暂停" data-i18n-title="播放 / 暂停（空格）" data-i18n-aria-label="播放或暂停">
+                      <svg class="svg-icon pc-icon pc-icon-play" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>
+                      <svg class="svg-icon pc-icon pc-icon-pause hidden" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="7" y="5" width="3.6" height="14" rx="1"/><rect x="13.4" y="5" width="3.6" height="14" rx="1"/></svg>
+                    </button>
+                    <div class="pc-progress">
+                      <span class="pc-time" id="pcCurrentTime">00:00:00</span>
+                      <div class="pc-track" id="seekTrack" title="点击或拖动定位" data-i18n-title="点击或拖动定位">
+                        <div class="pc-buffered" id="seekBuffered"></div>
+                        <div class="pc-played" id="seekPlayed"></div>
+                        <div class="pc-thumb" id="seekThumb"></div>
+                      </div>
+                      <span class="pc-time pc-time-duration" id="pcDuration">00:00:00</span>
+                    </div>
+                    <div class="pc-volume-control" id="volumeControl">
+                      <button class="pc-button" id="volumeButton" type="button" title="音量" aria-label="音量" aria-expanded="false" aria-controls="volumePopover" data-i18n-title="音量" data-i18n-aria-label="音量">
+                        <svg class="svg-icon pc-icon pc-icon-volume" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+                        <svg class="svg-icon pc-icon pc-icon-muted hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>
+                      </button>
+                      <div class="pc-volume-popover hidden" id="volumePopover">
+                        <output class="pc-volume-value" id="volumeValue" for="volumeRange">50</output>
+                        <input class="pc-volume" id="volumeRange" type="range" min="0" max="100" step="1" value="50" aria-orientation="vertical" title="音量" aria-label="音量" data-i18n-title="音量" data-i18n-aria-label="音量"/>
+                        <button class="pc-button pc-mute" id="muteButton" type="button" title="静音 / 取消静音" aria-label="静音" aria-pressed="false" data-i18n="静音" data-i18n-title="静音 / 取消静音" data-i18n-aria-label="静音">静音</button>
+                      </div>
+                    </div>
+                    <button class="pc-button pc-speed" id="speedButton" type="button" title="播放速度" data-i18n-title="播放速度">1.0×</button>
+                    <button class="pc-button" id="fullscreenButton" type="button" title="全屏" aria-label="全屏" data-i18n-title="全屏" data-i18n-aria-label="全屏">
+                      <svg class="svg-icon pc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="video-meta">
+                  <div>
+                    <span data-i18n="当前时间">当前时间</span>
+                    <strong id="currentVideoTime">00:00:00</strong>
+                  </div>
+                  <div>
+                    <span data-i18n="OCR 区域">OCR 区域</span>
+                    <strong id="ocrModeLabel" data-i18n="自动全屏识别">自动全屏识别</strong>
+                  </div>
+                </div>
+              </article>
+
+              <div class="proofread-splitter" id="proofreadSplitter" role="separator"
+                aria-orientation="vertical" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
+                aria-label="调整画面与字幕列表宽度" title="拖动调整画面与字幕列表宽度（双击复位，方向键微调）" data-i18n-aria-label="调整画面与字幕列表宽度" data-i18n-title="拖动调整画面与字幕列表宽度（双击复位，方向键微调）"></div>
+
+              <article class="subtitle-panel">
+                <div class="panel-head">
+                  <div>
+                    <h2 data-i18n="字幕列表">字幕列表</h2>
+                    <span id="subtitleCount">(5)</span>
+                  </div>
+                  <div class="subtitle-tools">
+                    <label class="search-box">
+                      <svg class="svg-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                      <input id="searchInput" type="search" placeholder="搜索字幕内容..."  data-i18n-placeholder="搜索字幕内容..."/>
+                    </label>
+                    <button class="ghost-btn compact" id="addSubtitleButton" type="button">
+                      <svg class="svg-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                      <span data-i18n="添加">添加</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="subtitle-list" id="subtitleList" aria-live="polite"></div>
+              </article>
+            </div>
+
+            <section class="timeline-panel" id="timelinePanel" aria-label="字幕时间轴" data-i18n-aria-label="字幕时间轴">
+              <div class="timeline-head">
+                <div class="timeline-title">
+                  <strong data-i18n="时间轴">时间轴</strong>
+                  <span id="timelineHint" data-i18n="拖动字幕块改时间 · 拖两端改起止 · 点空白跳转 · Ctrl+滚轮缩放 · Ctrl+Z撤回 · 识别后看不到字幕请点击右侧适应按钮">拖动字幕块改时间 · 拖两端改起止 · 点空白跳转 · Ctrl+滚轮缩放 · Ctrl+Z撤回 · 识别后看不到字幕请点击右侧适应按钮</span>
+                </div>
+                <div class="timeline-tools">
+                  <button class="icon-btn" id="timelineZoomOutButton" type="button" title="缩小时间轴" aria-label="缩小时间轴" data-i18n-title="缩小时间轴" data-i18n-aria-label="缩小时间轴">−</button>
+                  <span class="timeline-zoom-label" id="timelineZoomLabel">10 px/s</span>
+                  <button class="icon-btn" id="timelineZoomInButton" type="button" title="放大时间轴" aria-label="放大时间轴" data-i18n-title="放大时间轴" data-i18n-aria-label="放大时间轴">+</button>
+                  <button class="ghost-btn compact" id="timelineFitButton" type="button" title="适应窗口宽度" data-i18n-title="适应窗口宽度" data-i18n="适应">适应</button>
+                  <button class="ghost-btn compact" id="timelineCollapseButton" type="button" title="折叠时间轴" data-i18n-title="折叠时间轴" data-i18n="收起">收起</button>
+                </div>
+              </div>
+              <div class="timeline-body">
+                <div class="timeline-scroll" id="timelineScroll">
+                  <div class="timeline-inner" id="timelineInner">
+                    <div class="timeline-ruler" id="timelineRuler" title="双击适应窗口宽度" data-i18n-title="双击适应窗口宽度"></div>
+                    <div class="timeline-lane" id="timelineLane">
+                      <div class="timeline-blocks" id="timelineBlocks"></div>
+                    </div>
+                    <div class="timeline-playhead" id="timelinePlayhead"></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </section>
+
+          <section class="app-view" id="fileManagerView">
+            <div class="page-head">
+              <div class="title-stack">
+                <h1 data-i18n="文件管理">文件管理</h1>
+                <span class="divider"></span>
+                <p id="fileSummary" data-i18n="管理批量视频与处理状态">管理批量视频与处理状态</p>
+              </div>
+              <div class="head-actions">
+                <button class="ghost-btn" id="batchStopButton" type="button">
+                  <svg class="svg-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="5" y="5" rx="2"/></svg>
+                  <span data-i18n="停止全部">停止全部</span>
+                </button>
+                <button class="primary-btn" id="batchExportButton" type="button">
+                  <svg class="svg-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                  <span id="batchExportButtonLabel" data-i18n="批量导出 SRT">批量导出 SRT</span>
+                </button>
+              </div>
+            </div>
+
+            <article class="file-manager-panel">
+              <div class="panel-head file-panel-head">
+                <div>
+                  <h2 data-i18n="视频文件">视频文件</h2>
+                  <span id="fileCount">(0)</span>
+                </div>
+                <div class="file-toolbar">
+                  <label class="file-select-all">
+                    <input id="selectAllFilesCheckbox" type="checkbox" />
+                    <span data-i18n="全选">全选</span>
+                  </label>
+                  <button class="ghost-btn compact" id="batchDeleteButton" type="button">
+                    <svg class="svg-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                    <span data-i18n="删除">删除</span>
+                  </button>
+                  <label class="search-box file-search">
+                    <svg class="svg-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input id="fileSearchInput" type="search" placeholder="按文件名搜索..."  data-i18n-placeholder="按文件名搜索..."/>
+                  </label>
+                </div>
+              </div>
+              <div class="file-list" id="fileList" aria-live="polite"></div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="onboardingModal">
+      <section class="setup-modal" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
+        <button class="modal-close" id="closeSetupButton" type="button" aria-label="关闭" data-i18n-aria-label="关闭">×</button>
+        <div class="modal-title">
+          <h2 id="setupTitle" data-i18n="视频字幕提取">视频字幕提取</h2>
+          <p data-i18n="选择视频并配置识别参数 · 由 趣丸千音 AllVoiceLab AI 团队出品">选择视频并配置识别参数 · 由 趣丸千音 AllVoiceLab AI 团队出品</p>
+        </div>
+
+        <!-- 虚线框就是"选视频"这一整块：选完由已选列表原地接管（不再另起一块挂在下面）。 -->
+        <div class="pick-zone" id="pickZone">
+          <button class="drop-zone" id="chooseVideosButton" type="button">
+            <span class="brand-mark zone-logo"><span></span></span>
+            <strong id="videoPickLabel" data-i18n="拖入视频文件或点击选择">拖入视频文件或点击选择</strong>
+            <small data-i18n="支持批量选择；mkv/avi 可识别，预览需要先重新封装">支持批量选择；mkv/avi 可识别，预览需要先重新封装</small>
+          </button>
+          <input id="browserVideoInput" type="file" accept="video/*" multiple hidden />
+
+          <div class="pending-picker hidden" id="pendingPicker">
+            <div class="pending-bar">
+              <strong id="pendingSummary" data-i18n="已选择 0 个视频">已选择 0 个视频</strong>
+              <div class="pending-bar-actions">
+                <button class="ghost-btn compact" id="pendingAddButton" type="button" data-i18n="选择视频">选择视频</button>
+                <button class="ghost-btn compact" id="pendingSelectAllButton" type="button" data-i18n="全选">全选</button>
+                <button class="ghost-btn compact" id="pendingRemoveButton" type="button" disabled data-i18n="移除所选">移除所选</button>
+              </div>
+            </div>
+            <div class="pending-list" id="pendingList"></div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            <span data-i18n="识别语言">识别语言</span>
+            <select id="languageSelect">
+              <option value="ch" data-i18n="中文（简体）">中文（简体）</option>
+              <option value="chinese_cht" data-i18n="中文（繁体）">中文（繁体）</option>
+              <option value="en" data-i18n="英文">英文</option>
+              <option value="japan" data-i18n="日文">日文</option>
+              <option value="korean" data-i18n="韩文">韩文</option>
+              <option value="af" data-i18n="南非荷兰文">南非荷兰文</option>
+              <option value="az" data-i18n="阿塞拜疆文">阿塞拜疆文</option>
+              <option value="bs" data-i18n="波斯尼亚文">波斯尼亚文</option>
+              <option value="ca" data-i18n="加泰罗尼亚文">加泰罗尼亚文</option>
+              <option value="cs" data-i18n="捷克文">捷克文</option>
+              <option value="cy" data-i18n="威尔士文">威尔士文</option>
+              <option value="da" data-i18n="丹麦文">丹麦文</option>
+              <option value="de" data-i18n="德文">德文</option>
+              <option value="es" data-i18n="西班牙文">西班牙文</option>
+              <option value="et" data-i18n="爱沙尼亚文">爱沙尼亚文</option>
+              <option value="eu" data-i18n="巴斯克文">巴斯克文</option>
+              <option value="fi" data-i18n="芬兰文">芬兰文</option>
+              <option value="fr" data-i18n="法文">法文</option>
+              <option value="ga" data-i18n="爱尔兰文">爱尔兰文</option>
+              <option value="gl" data-i18n="加利西亚文">加利西亚文</option>
+              <option value="hr" data-i18n="克罗地亚文">克罗地亚文</option>
+              <option value="hu" data-i18n="匈牙利文">匈牙利文</option>
+              <option value="id" data-i18n="印尼文">印尼文</option>
+              <option value="is" data-i18n="冰岛文">冰岛文</option>
+              <option value="it" data-i18n="意大利文">意大利文</option>
+              <option value="ku" data-i18n="库尔德文">库尔德文</option>
+              <option value="la" data-i18n="拉丁文">拉丁文</option>
+              <option value="lb" data-i18n="卢森堡文">卢森堡文</option>
+              <option value="lt" data-i18n="立陶宛文">立陶宛文</option>
+              <option value="lv" data-i18n="拉脱维亚文">拉脱维亚文</option>
+              <option value="mi" data-i18n="毛利文">毛利文</option>
+              <option value="ms" data-i18n="马来文">马来文</option>
+              <option value="mt" data-i18n="马耳他文">马耳他文</option>
+              <option value="nl" data-i18n="荷兰文">荷兰文</option>
+              <option value="no" data-i18n="挪威文">挪威文</option>
+              <option value="oc" data-i18n="奥克文">奥克文</option>
+              <option value="pl" data-i18n="波兰文">波兰文</option>
+              <option value="pt" data-i18n="葡萄牙文">葡萄牙文</option>
+              <option value="qu" data-i18n="克丘亚文">克丘亚文</option>
+              <option value="rm" data-i18n="罗曼什文">罗曼什文</option>
+              <option value="ro" data-i18n="罗马尼亚文">罗马尼亚文</option>
+              <option value="rs_latin" data-i18n="塞尔维亚文（拉丁）">塞尔维亚文（拉丁）</option>
+              <option value="sk" data-i18n="斯洛伐克文">斯洛伐克文</option>
+              <option value="sl" data-i18n="斯洛文尼亚文">斯洛文尼亚文</option>
+              <option value="sq" data-i18n="阿尔巴尼亚文">阿尔巴尼亚文</option>
+              <option value="sv" data-i18n="瑞典文">瑞典文</option>
+              <option value="sw" data-i18n="斯瓦希里文">斯瓦希里文</option>
+              <option value="tl" data-i18n="他加禄文">他加禄文</option>
+              <option value="tr" data-i18n="土耳其文">土耳其文</option>
+              <option value="uz" data-i18n="乌兹别克文">乌兹别克文</option>
+              <option value="vi" data-i18n="越南文">越南文</option>
+              <option value="french" data-i18n="法文（别名）">法文（别名）</option>
+              <option value="german" data-i18n="德文（别名）">德文（别名）</option>
+            </select>
+          </label>
+          <label class="directory-row">
+            <span data-i18n="输出目录">输出目录</span>
+            <input id="outputDirInput" placeholder="留空则写视频所在目录"  data-i18n-placeholder="留空则写视频所在目录"/>
+            <button id="chooseDirButton" class="ghost-btn compact" type="button" data-i18n="浏览">浏览</button>
+          </label>
+        </div>
+
+        <section class="expert-box">
+          <label class="check-row">
+            <input id="expertToggle" type="checkbox" checked />
+            <span data-i18n="专家模式">专家模式</span>
+            <button class="chevron" id="expertCollapseButton" type="button" aria-label="展开或收起专家模式" data-i18n-aria-label="展开或收起专家模式"></button>
+          </label>
+          <div class="expert-fields" id="expertFields">
+            <label class="threshold-row">
+              <span data-i18n="识别阈值">识别阈值</span>
+              <input id="thresholdRange" type="range" min="0.05" max="0.95" step="0.01" value="0.38" />
+              <output id="thresholdOutput">0.38</output>
+            </label>
+            <label class="interval-row">
+              <span data-i18n="帧采样间隔">帧采样间隔</span>
+              <input id="sampleGapInput" type="number" min="1" max="8" step="1" value="2" />
+              <small data-i18n="帧（1、2、4、6、8）">帧（1、2、4、6、8）</small>
+            </label>
+            <label class="interval-row">
+              <span data-i18n="CPU 核数">CPU 核数</span>
+              <input id="cpuThreadsInput" type="number" min="1" max="16" step="1" />
+              <small id="cpuThreadsHint" data-i18n="线程">线程</small>
+            </label>
+            <label class="interval-row">
+              <span data-i18n="推理设备">推理设备</span>
+              <select id="deviceSelect">
+                <option value="auto" data-i18n="自动">自动</option>
+                <option value="cpu">CPU</option>
+                <option value="gpu" data-i18n="优先 GPU">优先 GPU</option>
+              </select>
+              <small id="deviceHint" data-i18n="检测中…">检测中…</small>
+            </label>
+          </div>
+        </section>
+
+        <div class="modal-actions">
+          <button class="primary-btn wide" id="startRecognizeButton" type="button" disabled data-i18n="开始识别">开始识别</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-backdrop hidden" id="loadingModal">
+      <section class="progress-modal" role="dialog" aria-modal="true" aria-labelledby="loadingTitle">
+        <div class="progress-ring" aria-label="识别进度" data-i18n-aria-label="识别进度">
+          <svg viewBox="0 0 140 140">
+            <circle class="track" cx="70" cy="70" r="56"></circle>
+            <circle class="meter" id="progressCircle" cx="70" cy="70" r="56"></circle>
+          </svg>
+          <strong id="progressValue">0%</strong>
+        </div>
+        <h2 id="loadingTitle" data-i18n="正在识别字幕...">正在识别字幕...</h2>
+        <p id="loadingDetail" data-i18n="等待后端…">等待后端…</p>
+        <p class="loading-sub" id="loadingSub"></p>
+        <div class="linear-progress"><span id="linearProgress"></span></div>
+        <button class="ghost-btn cancel-btn" id="cancelRunButton" type="button">
+          <svg class="svg-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="5" y="5" rx="2"/></svg>
+          <span data-i18n="中断">中断</span>
+        </button>
+      </section>
+    </div>
+
+    <div class="modal-backdrop hidden" id="errorModal">
+      <section class="error-modal" role="dialog" aria-modal="true" aria-labelledby="errorTitle">
+        <button class="modal-close" id="closeErrorButton" type="button" aria-label="关闭" data-i18n-aria-label="关闭">×</button>
+        <div class="error-top-line"></div>
+        <div class="warning-icon">!</div>
+        <h2 id="errorTitle" data-i18n="识别未能完成">识别未能完成</h2>
+        <code id="errorCode"></code>
+        <p class="error-detail" id="errorDetail"></p>
+        <p id="errorHint"></p>
+        <p data-i18n="别担心，已有成果不受影响。详细报错和错误码已经写进日志文件，把日志发给我们（或点「复制诊断信息」），会有人尽快跟进修复。">别担心，已有成果不受影响。详细报错和错误码已经写进日志文件，把日志发给我们（或点「复制诊断信息」），会有人尽快跟进修复。</p>
+        <p class="error-detail" id="errorLogPath"></p>
+        <div class="error-actions">
+          <button class="primary-btn hidden" id="retryErrorButton" type="button">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+            <span data-i18n="重新连接">重新连接</span>
+          </button>
+          <button class="ghost-btn" id="copyErrorButton" type="button">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            <span data-i18n="复制诊断信息">复制诊断信息</span>
+          </button>
+          <button class="ghost-btn" id="feedbackButton" type="button">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+            <span data-i18n="打开日志位置">打开日志位置</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-backdrop hidden" id="aboutModal">
+      <section class="about-modal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+        <button class="modal-close" id="closeAboutButton" type="button" aria-label="关闭" data-i18n-aria-label="关闭">×</button>
+        <div class="about-heading">
+          <img class="about-logo" id="aboutLogo" src="./icons/icon-neon.png" alt="趣丸千音 AllVoiceLab" width="44" height="44" />
+          <h2 id="aboutTitle">趣丸千音 · AllVoiceLab</h2>
+        </div>
+        <div class="intro-language-row">
+          <span data-i18n="界面语言">界面语言</span>
+          <div class="language-buttons" role="group" aria-label="Language / 语言">
+            <button type="button" data-ui-language="zh-CN" lang="zh-CN" aria-pressed="true">中文</button>
+            <button type="button" data-ui-language="en" lang="en" aria-pressed="false">English</button>
+          </div>
+        </div>
+        <div class="about-intro">
+          <p data-i18n-html="本项目由 &lt;strong class=&quot;hl&quot;&gt;趣丸千音（AllVoiceLab）AI 团队&lt;/strong&gt; 打造。">本项目由 <strong class="hl">趣丸千音（AllVoiceLab）AI 团队</strong> 打造。</p>
+          <p data-i18n-html="我们专注于影视与泛娱乐内容的&lt;strong class=&quot;hl&quot;&gt;多模态 AI 技术研发&lt;/strong&gt;，围绕&lt;strong class=&quot;hl&quot;&gt;多语言内容理解，译配与分发场景&lt;/strong&gt;，持续研发垂直领域模型与智能化工具链。字幕校对只是其中一环，也是 AllVoiceLab 在&lt;strong class=&quot;hl&quot;&gt;全球化内容基础设施&lt;/strong&gt;中的一次开源实践。">我们专注于影视与泛娱乐内容的<strong class="hl">多模态 AI 技术研发</strong>，围绕<strong class="hl">多语言内容理解，译配与分发场景</strong>，持续研发垂直领域模型与智能化工具链。字幕校对只是其中一环，也是 AllVoiceLab 在<strong class="hl">全球化内容基础设施</strong>中的一次开源实践。</p>
+          <p data-i18n-html="从字幕校对到内容理解，从音视频处理到多语言生产，AllVoiceLab 正在打造面向内容产业的&lt;strong class=&quot;hl&quot;&gt;新一代 AI 技术体系&lt;/strong&gt;。">从字幕校对到内容理解，从音视频处理到多语言生产，AllVoiceLab 正在打造面向内容产业的<strong class="hl">新一代 AI 技术体系</strong>。</p>
+        </div>
+        <div class="about-actions">
+          <button class="primary-btn" id="brandHomeButton" type="button">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+            <span data-i18n="官方网站">官方网站</span>
+          </button>
+          <button class="ghost-btn" id="brandStarButton" type="button">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span data-i18n="GitHub 仓库">GitHub 仓库</span>
+          </button>
+          <button class="ghost-btn" id="brandGuideButton" type="button">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14m0-15C9 3 5 3 2 4v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2z"/></svg>
+            <span data-i18n="使用指南">使用指南</span>
+          </button>
+        </div>
+        <div class="about-footer">
+          <button class="about-business-link" id="brandBusinessButton" type="button">
+            <span data-i18n="商务合作">商务合作</span>
+            <svg class="svg-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-backdrop hidden" id="settingsModal">
+      <section class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <button class="modal-close" id="closeSettingsButton" type="button" aria-label="关闭" data-i18n-aria-label="关闭">×</button>
+        <div class="settings-heading">
+          <div class="settings-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+          </div>
+          <div>
+            <h2 id="settingsTitle" data-i18n="设置">设置</h2>
+            <p data-i18n="调整应用外观与校对偏好">调整应用外观与校对偏好</p>
+          </div>
+        </div>
+        <div class="settings-list">
+          <div class="settings-row">
+            <div>
+              <strong data-i18n="界面语言">界面语言</strong>
+              <span data-i18n="选择界面显示语言，自动保存">选择界面显示语言，自动保存</span>
+            </div>
+            <div class="language-buttons" role="group" aria-label="Language / 语言">
+              <button type="button" data-ui-language="zh-CN" lang="zh-CN" aria-pressed="true">中文</button>
+              <button type="button" data-ui-language="en" lang="en" aria-pressed="false">English</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div>
+              <strong data-i18n="界面主题">界面主题</strong>
+              <span data-i18n="切换浅色与深色工作区">切换浅色与深色工作区</span>
+            </div>
+            <div class="settings-theme-buttons">
+              <button id="settingsLightButton" class="active" type="button" data-i18n="浅色">浅色</button>
+              <button id="settingsDarkButton" type="button" data-i18n="深色">深色</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <div>
+              <strong data-i18n="界面大小">界面大小</strong>
+              <span data-i18n="调整字体、图标和控件密度">调整字体、图标和控件密度</span>
+            </div>
+            <label class="ui-scale-control">
+              <input id="uiScaleRange" type="range" min="0" max="2" step="1" value="1" />
+              <output id="uiScaleOutput" data-i18n="标准">标准</output>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div>
+              <strong data-i18n="配色方案">配色方案</strong>
+              <span data-i18n="选择重点色，浅色与深色共用">选择重点色，浅色与深色共用</span>
+            </div>
+            <div class="palette-picker" id="palettePicker" role="group" aria-label="配色方案" data-i18n-aria-label="配色方案"></div>
+          </div>
+          <div class="settings-row">
+            <div>
+              <strong data-i18n="启动时显示产品介绍">启动时显示产品介绍</strong>
+              <span data-i18n="关掉后打开软件不再自动弹出（仍可点左上角图标查看）">关掉后打开软件不再自动弹出（仍可点左上角图标查看）</span>
+            </div>
+            <label class="switch-control">
+              <input id="introOnStartupToggle" type="checkbox" checked />
+              <span></span>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div>
+              <strong data-i18n="自动保存校对内容">自动保存校对内容</strong>
+              <span data-i18n="关掉后改动只在切视频 / 导出 / 关闭窗口时写入 SRT">关掉后改动只在切视频 / 导出 / 关闭窗口时写入 SRT</span>
+            </div>
+            <label class="switch-control">
+              <input id="autoSaveToggle" type="checkbox" checked />
+              <span></span>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div>
+              <strong data-i18n="播放时自动定位字幕">播放时自动定位字幕</strong>
+              <span data-i18n="视频播放时跟随当前字幕条目">视频播放时跟随当前字幕条目</span>
+            </div>
+            <label class="switch-control">
+              <input id="followPlaybackToggle" type="checkbox" checked />
+              <span></span>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div>
+              <strong data-i18n="使用原生播放控件">使用原生播放控件</strong>
+              <span data-i18n="回退到 Chromium 自带控件条（画面内定格帧会关闭）">回退到 Chromium 自带控件条（画面内定格帧会关闭）</span>
+            </div>
+            <label class="switch-control">
+              <input id="nativeControlsToggle" type="checkbox" />
+              <span></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-footer">
+          <button class="ghost-btn" id="resetSettingsButton" type="button" data-i18n="恢复默认">恢复默认</button>
+          <button class="primary-btn" id="saveSettingsButton" type="button" data-i18n="保存设置">保存设置</button>
+        </div>
+        <div class="settings-version">
+          <span data-i18n="版本">版本</span>
+          <span id="appVersion">—</span>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <script src="./i18n-dictionary.js"></script>
+    <script src="./i18n-core.js"></script>
+    <script src="./i18n.js"></script>
+    <script src="./ocr.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

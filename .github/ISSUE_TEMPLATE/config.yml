@@ -1,0 +1,2 @@
+# 不允许"空白 issue"：所有反馈都走上面的模板，日志和环境信息才是能定位问题的前提。
+blank_issues_enabled: false

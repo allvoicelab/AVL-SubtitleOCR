@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "avl-open-ocr"
+version = "0.1.0"
+description = "Lightweight CPU-friendly video subtitle OCR extraction"
+readme = { text = "Lightweight CPU-friendly video subtitle OCR extraction (detection, recognition, post-processing and SRT export).", content-type = "text/markdown" }
+requires-python = ">=3.9"
+license = "Apache-2.0"
+dependencies = [
+  "numpy>=1.23",
+  "opencv-python>=4.8",
+  # 同一个 onnxruntime 模块只能有一个发行版：Windows 用 DirectML 版（自带 CPU
+  # 回退，N 卡 / A 卡 / Intel 核显都能走 GPU），其它平台装普通版。见 README「GPU（DirectML）」。
+  "onnxruntime-directml>=1.24; sys_platform == 'win32'",
+  "onnxruntime>=1.16; sys_platform != 'win32'",
+  "pyclipper>=1.3",
+  "shapely>=2.0",
+]
+
+[project.optional-dependencies]
+paddleocr = [
+  "paddlepaddle>=2.6",
+  "paddleocr>=2.7",
+  # 同一个 onnxruntime 模块只能有一个发行版：Windows 用 DirectML 版（自带 CPU
+  # 回退，N 卡 / A 卡 / Intel 核显都能走 GPU），其它平台装普通版。见 README「GPU（DirectML）」。
+  "onnxruntime-directml>=1.24; sys_platform == 'win32'",
+  "onnxruntime>=1.16; sys_platform != 'win32'",
+  "pyclipper>=1.3",
+  "shapely>=2.0",
+]
+
+test = ["pytest>=7"]
+
+[project.scripts]
+avl-open-ocr = "avl_open_ocr.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["avl_open_ocr*"]
+
+[tool.setuptools.package-data]
+avl_open_ocr = ["model_files/*.onnx", "model_files/*.txt"]
